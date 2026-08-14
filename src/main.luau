@@ -1,6 +1,7 @@
 -- Init Shared Space
 local Forsaken = type(getgenv().GetShared) == "function" and getgenv().GetShared() or {}
 if Forsaken.__initialized then
+    warn("Forsaken is already initialized. Unloading previous instance.")
     Forsaken.Unload()
     Forsaken = {}
 end
@@ -15,7 +16,7 @@ getgenv().GetShared = GetShared
 getgenv().Forsaken = Forsaken
 -- Resolve Includes
 function Include(path)
-    local baseUrl = "https://raw.githubusercontent.com/Sino1507/Forsaken/refs/heads/main/src/"
+    local baseUrl = "https://raw.githubusercontent.com/Sino1507/Forsaken/main/src/"
     local url = baseUrl .. path
 
     local response = game:HttpGet(url)

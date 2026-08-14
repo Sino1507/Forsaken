@@ -1,1 +1,1 @@
-print("No Implementation")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Sino1507/Forsaken/refs/heads/main/src/main.luau")))()

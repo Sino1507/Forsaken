@@ -1,19 +1,20 @@
+local RunService = game:GetService("RunService")
+
 -- Init Shared Space
-local Forsaken = type(getgenv().GetShared) == "function" and getgenv().GetShared() or {}
+local Forsaken = getgenv().Forsaken or {}
 if Forsaken.__initialized then
     warn("Forsaken is already initialized. Unloading previous instance.")
     Forsaken.Unload()
     Forsaken = {}
+else
+    Forsaken.settings = {}
+    Forsaken.globals = {}
+    Forsaken.instances = {}
+    Forsaken.connections = {}
 end
 
 Forsaken.__initialized = true
 
-function GetShared()
-    return getgenv().Forsaken
-end
-getgenv().GetShared = GetShared
-
-getgenv().Forsaken = Forsaken
 -- Resolve Includes
 function Include(path)
     local baseUrl = "https://raw.githubusercontent.com/Sino1507/Forsaken/main/src/"
@@ -31,10 +32,39 @@ function Include(path)
         error("Failed to fetch script from " .. url)
     end
 end
+getgenv().Include = Include
+
+local Globals = Include("Globals/Globals.luau")
+local Settings = Include("Globals/Settings.luau")
+
+local StaminaController = Include("Features/StaminaController.luau")
+
+Globals.Init()
+Settings.Init()
+
+StaminaController:Init()
+
+-- Main Loop tied to RenderStepped
+Forsaken.connections.RenderStepped = RunService.RenderStepped:Connect(function()
+    StaminaController:Run()
+end)
+
+
 
 -- Unload Function
 function Forsaken.Unload()
     Forsaken.__initialized = false
+
+    for _, connection in pairs(Forsaken.connections) do
+        if connection and connection.Disconnect then
+            connection:Disconnect()
+        end
+    end
+
+    Forsaken.connections = {}
+
     getgenv().Forsaken = nil
     getgenv().GetShared = nil
 end
+
+getgenv().Forsaken = Forsaken

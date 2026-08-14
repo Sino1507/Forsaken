@@ -12,6 +12,7 @@ function GetShared()
 end
 getgenv().GetShared = GetShared
 
+getgenv().Forsaken = Forsaken
 -- Resolve Includes
 function Include(path)
     local baseUrl = "https://raw.githubusercontent.com/Sino1507/Forsaken/refs/heads/main/src/"

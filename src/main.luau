@@ -15,6 +15,8 @@ end
 
 Forsaken.__initialized = true
 
+getgenv().Forsaken = Forsaken
+
 -- Resolve Includes
 function Include(path)
     local baseUrl = "https://raw.githubusercontent.com/Sino1507/Forsaken/main/src/"
@@ -66,5 +68,3 @@ function Forsaken.Unload()
     getgenv().Forsaken = nil
     getgenv().GetShared = nil
 end
-
-getgenv().Forsaken = Forsaken

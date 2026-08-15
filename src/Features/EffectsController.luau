@@ -53,10 +53,15 @@ function EffectsController:Run()
             }
 
             self.cachedDefaults[effect] = cached
-        elseif effect.Value ~= cached.modified and effect.Value ~= 1 then
+        elseif effect.Value ~= cached.modified then
             -- Something else changed the value.
             -- Treat the new value as the game's actual/base value.
             cached.original = effect.Value
+        end
+
+        if cached.original == 1 then 
+            cached = nil
+            continue
         end
 
         local multiplier

@@ -6,11 +6,11 @@ function Watermark:Init()
         error("Forsaken is not initialized. Please ensure that the main script is loaded before accessing other scripts.")
     end
 
-    local settings = Forsaken.settings
-    local globals = Forsaken.globals
-    local cache = Forsaken.cache
-    local connections = Forsaken.connections
-    local instances = Forsaken.instances
+    self.settings = Forsaken.settings
+    self.globals = Forsaken.globals
+    self.cache = Forsaken.cache
+    self.connections = Forsaken.connections
+    self.instances = Forsaken.instances
 
     local developerMode = Forsaken.developmentMode
 
@@ -42,16 +42,16 @@ function Watermark:Init()
 
     self.watermark = watermark
 
-    table.insert(instances, screenGui)
-    table.insert(instances, frame)
-    table.insert(instances, watermark)
+    table.insert(self.instances, screenGui)
+    table.insert(self.instances, frame)
+    table.insert(self.instances, watermark)
 end
 
 function Watermark:Run()
     -- Update the watermark text with the current information
-    if Forsaken.settings.showWatermark then
+    if self.settings.showWatermark then
         self.watermark.Visible = true
-        if Forsaken.developmentMode then
+        if self.settings.showWatermarkdebug then
             -- because connections are stored in a lookup table without table.insert rather connections[x] = y we need to calculate the number of connections diffrently than #connections
             local numConnections = 0
             for _, _ in pairs(Forsaken.connections) do
@@ -74,6 +74,7 @@ function Watermark:Run()
                 numCachedItems = numCachedItems + 1
             end
 
+            self.watermark.Size = UDim2.new(1, 0, 1, 0)
             self.watermark.Text = string.format(
                 "Forsaken v%s by Sino\nFrame Time: %.2f ms\nFPS: %.2f\nConnections: %d\nInstances: %d\nCached Killers: %d\nCached Survivors: %d\nCached Items: %d",
                 Forsaken.globals.version,
@@ -86,7 +87,8 @@ function Watermark:Run()
                 numCachedItems
             )
         else
-            self.watermark.Text = "Forsaken v" .. Forsaken.globals.version .. "\nBy Sino"
+            self.watermark.Size = UDim2.new(1, 0, 0.3, 0)
+            self.watermark.Text = "Forsaken v" .. Forsaken.globals.version .. " By Sino"
         end
     else
         self.watermark.Visible = false

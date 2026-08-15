@@ -5,6 +5,9 @@ local UI = {}
 function UI:Init()
     local Forsaken = getgenv().Forsaken
 
+    local Saving = getgenv().Include("Saving/Saving.luau")
+    Saving:Init()
+
     if not Forsaken.__initialized then
         error("Forsaken is not initialized. Please ensure that the main script is loaded before accessing other scripts.")
     end
@@ -18,6 +21,7 @@ function UI:Init()
         name = "Forsaken",
         subtitle = "Made with <3 by Sino",
     })
+    Forsaken.globals.window = self.window
 
     local staminaTab = self.window:CreateTab({ name = "Stamina", icon = 93364949241311 })
 
@@ -26,7 +30,7 @@ function UI:Init()
     local noDrainToggle = staminaTab:CreateToggle({
         name = "No Drain",
         flag = "NoDrain",
-        value = false,
+        value = settings.Stamina.NoDrain,
         callback = function(value)
             settings.Stamina.NoDrain = value
         end,
@@ -34,54 +38,56 @@ function UI:Init()
 
     staminaTab:CreateKeybind({
         name = "No Drain Keybind",
-        value = Enum.KeyCode.LeftAlt,
+        flag = "NoDrainKeybind",
+        value = Enum.KeyCode.X,
         callback = function(key)
-            settings.Stamina.NoDrain = not settings.Stamina.NoDrain
-            noDrainToggle:Set(settings.Stamina.NoDrain, true)
+            noDrainToggle:Set(settings.Stamina.NoDrain)
         end,
     })
 
-    staminaTab:CreateSlider({
+    staminaTab:CreateSection({ name = "Advanced", icon = 93364949241311 })
+
+    local drainSlider = staminaTab:CreateSlider({
         name = "Stamina Drain Rate",
         flag = "StaminaDrainRate",
         range = { 0, 200 },
         increment = 5,
-        value = 100,
+        value = settings.Stamina.StaminaDrainRate * 100,
         suffix = "%",
         callback = function(value)
             settings.Stamina.StaminaDrainRate = value / 100
         end,
     })
 
-    staminaTab:CreateSlider({
+    local recoverySlider = staminaTab:CreateSlider({
         name = "Stamina Recovery Rate",
         flag = "StaminaRecoveryRate",
         range = { 0, 200 },
         increment = 5,
-        value = 100,
+        value = settings.Stamina.StaminaRecoveryRate * 100,
         suffix = "%",
         callback = function(value)
             settings.Stamina.StaminaRecoveryRate = value / 100
         end,
     })
 
-    staminaTab:CreateSlider({
+    local speedSlider = staminaTab:CreateSlider({
         name = "Sprint Speed Multiplier",
         flag = "SprintSpeedMultiplier",
         range = { 10, 200 },
         increment = 5,
-        value = 100,
+        value = settings.Stamina.SprintSpeedMultiplier * 100,
         suffix = "%",
         callback = function(value)
             settings.Stamina.SprintSpeedMultiplier = value / 100
         end,
     })
 
-    staminaTab:CreateInput({
+    local maxInput = staminaTab:CreateInput({
         name = "Max Stamina",
         flag = "MaxStamina",
         numeric = true,
-        value = "100",
+        value = tostring(settings.Stamina.MaxStamina),
         placeholder = "Enter a number",
         callback = function(text)
             local toNumber = tonumber(text)
@@ -90,6 +96,69 @@ function UI:Init()
             else
                 warn("Invalid input for Max Stamina. Please enter a valid number.")
             end
+        end,
+    })
+
+    local presetsDropDown = staminaTab:CreateDropdown({
+        name = "Presets",
+        flag = "StaminaPresets",
+        multiSelect = false,
+        options = { "Default", "Legit", "Balanced", "Semi-Legit", "Blatant" },
+        placeholder = "Custom",
+        callback = function(selected)
+            if selected == "Default" then 
+                drainSlider:Set(100)
+                recoverySlider:Set(100)
+                speedSlider:Set(100)
+                maxInput:Set("100")
+            elseif selected == "Legit" then
+                drainSlider:Set(90)
+                recoverySlider:Set(105)
+                speedSlider:Set(100)
+                maxInput:Set("100")
+            elseif selected == "Balanced" then 
+                drainSlider:Set(80)
+                recoverySlider:Set(110)
+                speedSlider:Set(100)
+                maxInput:Set("100")
+            elseif selected == "Semi-Legit" then 
+                drainSlider:Set(70)
+                recoverySlider:Set(120)
+                speedSlider:Set(100)
+                maxInput:Set("100")
+            elseif selected == "Blatant" then 
+                drainSlider:Set(50)
+                recoverySlider:Set(150)
+                speedSlider:Set(110)
+                maxInput:Set("100")
+            end
+        end,
+    })
+
+    presetsDropDown:MoveToTop()
+
+    local generatorTab = self.window:CreateTab({ name = "Generator", icon = 93364949241311 })
+
+    generatorTab:CreateSection({ name = "Generator", icon = 93364949241311 })
+
+    generatorTab:CreateToggle({
+        name = "Auto Complete",
+        flag = "AutoCompleteGenerator",
+        value = settings.Generator.AutoComplete,
+        callback = function(value)
+            settings.Generator.AutoComplete = value
+        end,
+    })
+
+    generatorTab:CreateSlider({
+        name = "Auto Delay",
+        flag = "AutoGeneratorDelay",
+        range = { 0, 20 },
+        increment = 0.5,
+        value = settings.Generator.AutoDelay,
+        suffix = "s",
+        callback = function(value)
+            settings.Generator.AutoDelay = value
         end,
     })
 
@@ -205,9 +274,53 @@ function UI:Init()
     settingsTab:CreateToggle({
         name = "Show Watermark",
         flag = "ShowWatermark",
-        value = true,
+        value = settings.showWatermark,
         callback = function(value)
             settings.showWatermark = value
+        end,
+    })
+
+    settingsTab:CreateToggle({
+        name = "Show Watermark Debug",
+        flag = "ShowWatermarkDebug",
+        value = settings.showWatermarkdebug,
+        callback = function(value)
+            settings.showWatermarkdebug = value
+        end,
+    })
+
+
+    settingsTab:CreateSection({ name = "Save", icon = 93364949241311 })
+
+    settingsTab:CreateToggle({
+        name = "Auto Save",
+        flag = "AutoSave",
+        value = settings.autoSave,
+        callback = function(value)
+            settings.autoSave = value
+        end,
+    })
+
+    settingsTab:CreateButton({
+        name = "Save",
+        callback = function()
+            Saving:Save()
+        end,
+    })
+
+    settingsTab:CreateButton({
+        name = "Delete",
+        callback = function()
+            Saving:Delete()
+        end,
+    })
+
+    settingsTab:CreateSection({ name = "Unload", icon = 93364949241311 })
+
+    settingsTab:CreateButton({
+        name = "Unload",
+        callback = function()
+            Forsaken.Unload()
         end,
     })
 end

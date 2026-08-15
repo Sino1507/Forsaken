@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 
 -- Init Shared Space
@@ -19,7 +20,7 @@ else
 end
 
 Forsaken.__initialized = true
-Forsaken.developmentMode = false
+Forsaken.developmentMode = true
 
 getgenv().Forsaken = Forsaken
 
@@ -65,6 +66,8 @@ getgenv().Include = Include
 local Globals = Include("Globals/Globals.luau")
 local Settings = Include("Globals/Settings.luau")
 
+local Saving = Include("Saving/Saving.luau")
+
 local Cache = Include("Cache/Cache.luau")
 
 local UI = Include("Render/UI.luau")
@@ -72,9 +75,13 @@ local ESP = Include("Render/ESP.luau")
 local Watermark = Include("Render/Watermark.luau")
 
 local StaminaController = Include("Features/StaminaController.luau")
+local GeneratorController = Include("Features/GeneratorController.luau")
 
 Globals.Init()
 Settings.Init()
+
+Saving:Init()
+local LoadedSave = Saving:Load()
 
 Cache:Init()
 
@@ -83,12 +90,16 @@ ESP:Init()
 Watermark:Init()
 
 StaminaController:Init()
+GeneratorController:Init()
+
+Forsaken.globals.window:Toast({ title = (LoadedSave and "Save Loaded" or "No Save"), position = "Bottom", icon = 125823673784681 })
 
 -- Main Loop tied to RenderStepped
 Forsaken.connections.RenderStepped = RunService.RenderStepped:Connect(function()
     local startTime = tick()
 
     StaminaController:Run()
+    GeneratorController:Run()
     ESP:Run()
     Watermark:Run()
 
@@ -100,9 +111,22 @@ Forsaken.connections.RenderStepped = RunService.RenderStepped:Connect(function()
     }
 end)
 
+Players.PlayerRemoving:Connect(function(player)
+    if player == Players.LocalPlayer then 
+        if Forsaken.settings.autoSave then 
+            Saving:Save()
+        end
+
+        Forsaken.Unload()
+    end
+end)
 
 -- Unload Function
 function Forsaken.Unload()
+    if Forsaken.settings.autoSave then 
+        Saving:Save()
+    end
+
     for _, connection in pairs(Forsaken.connections) do
         if connection and connection.Disconnect then
             connection:Disconnect()
@@ -115,6 +139,7 @@ function Forsaken.Unload()
     ESP:Unload()
     UI:Unload()
     StaminaController:Unload()
+    GeneratorController:Unload()
 
     Forsaken.__initialized = false
 
@@ -127,5 +152,4 @@ function Forsaken.Unload()
     Forsaken.instances = {}
 
     getgenv().Forsaken = nil
-    getgenv().GetShared = nil
 end

@@ -11,6 +11,8 @@ function Settings.Init()
 
     -- Define settings here
     settings.showWatermark = true
+    settings.showWatermarkdebug = false
+    settings.autoSave = false
 
     settings.Stamina = {
         NoDrain = false,
@@ -18,6 +20,11 @@ function Settings.Init()
         StaminaRecoveryRate = 1.0,
         SprintSpeedMultiplier = 1.0,
         MaxStamina = 100,
+    }
+
+    settings.Generator = {
+        AutoComplete = false,
+        AutoDelay = 5,
     }
 
     settings.ESP = {

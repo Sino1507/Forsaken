@@ -99,7 +99,7 @@ function UI:Init()
         end,
     })
 
-    local presetsDropDown = staminaTab:CreateDropdown({
+    local presetsDropDownStamina = staminaTab:CreateDropdown({
         name = "Presets",
         flag = "StaminaPresets",
         multiSelect = false,
@@ -132,10 +132,100 @@ function UI:Init()
                 speedSlider:Set(110)
                 maxInput:Set("100")
             end
+
+            self.window:Toast({ title = "Preset Applied", position = "Bottom", icon = 125823673784681 })
         end,
     })
 
-    presetsDropDown:MoveToTop()
+    presetsDropDownStamina:MoveToTop()
+
+    local effectsTab = self.window:CreateTab({ name = "Effects", icon = 93364949241311 })
+
+    effectsTab:CreateSection({ name = "Effects", icon = 93364949241311 })
+
+    local buffSlownessSlider = effectsTab:CreateSlider({
+        name = "Modiefied Slowness",
+        flag = "BuffSlownessRate",
+        range = { 0, 200 },
+        increment = 5,
+        value = settings.Effects.BuffSlownessRate * 100,
+        suffix = "%",
+        callback = function(value)
+            settings.Effects.BuffSlownessRate = value / 100
+        end,
+    })
+
+    local buffSpeedSlider = effectsTab:CreateSlider({
+        name = "Modified Speed",
+        flag = "BuffSpeedRate",
+        range = { 10, 200 },
+        increment = 5,
+        value = settings.Effects.BuffSpeedRate * 100,
+        suffix = "%",
+        callback = function(value)
+            settings.Effects.BuffSpeedRate = value / 100
+        end,
+    })
+
+    effectsTab:CreateSection({ name = "Advanced", icon = 93364949241311 })
+
+    local ignoreSprintingBuff = effectsTab:CreateToggle({
+        name = "Ignore Sprinting Buff",
+        flag = "IgnoreSprinting",
+        value = settings.Effects.IgnoreSprinting,
+        callback = function(value)
+            settings.Effects.IgnoreSprinting = value
+        end,
+    })
+
+    local ignoreDirectionalDebuff = effectsTab:CreateToggle({
+        name = "Ignore Directional Debuff",
+        flag = "IgnoreDirectional",
+        value = settings.Effects.IgnoreDirectional,
+        callback = function(value)
+            settings.Effects.IgnoreDirectional = value
+        end,
+    })
+
+    local presetsDropDownEffects = effectsTab:CreateDropdown({
+        name = "Presets",
+        flag = "EffectsPresets",
+        multiSelect = false,
+        options = { "Default", "Legit", "Balanced", "Semi-Legit", "Blatant" },
+        placeholder = "Custom",
+        callback = function(selected)
+            if selected == "Default" then 
+                buffSlownessSlider:Set(100)
+                buffSpeedSlider:Set(100)
+                ignoreSprintingBuff:Set(true)
+                ignoreDirectionalDebuff:Set(false)
+            elseif selected == "Legit" then
+                buffSlownessSlider:Set(90)
+                buffSpeedSlider:Set(100)
+                ignoreSprintingBuff:Set(true)
+                ignoreDirectionalDebuff:Set(true)
+            elseif selected == "Balanced" then 
+                buffSlownessSlider:Set(90)
+                buffSpeedSlider:Set(110)
+                ignoreSprintingBuff:Set(true)
+                ignoreDirectionalDebuff:Set(true)
+            elseif selected == "Semi-Legit" then 
+                buffSlownessSlider:Set(80)
+                buffSpeedSlider:Set(110)
+                ignoreSprintingBuff:Set(true)
+                ignoreDirectionalDebuff:Set(false)
+            elseif selected == "Blatant" then 
+                buffSlownessSlider:Set(70)
+                buffSpeedSlider:Set(130)
+                ignoreSprintingBuff:Set(false)
+                ignoreDirectionalDebuff:Set(false)
+            end
+
+            self.window:Toast({ title = "Preset Applied", position = "Bottom", icon = 125823673784681 })
+        end,
+    })
+
+    presetsDropDownEffects:MoveToTop()
 
     local generatorTab = self.window:CreateTab({ name = "Generator", icon = 93364949241311 })
 
@@ -150,10 +240,10 @@ function UI:Init()
         end,
     })
 
-    generatorTab:CreateSlider({
+    local autoDelayGenerator = generatorTab:CreateSlider({
         name = "Auto Delay",
         flag = "AutoGeneratorDelay",
-        range = { 0, 20 },
+        range = { 0, 5 },
         increment = 0.5,
         value = settings.Generator.AutoDelay,
         suffix = "s",
@@ -161,6 +251,49 @@ function UI:Init()
             settings.Generator.AutoDelay = value
         end,
     })
+
+    local randomDelayGenerator = generatorTab:CreateSlider({
+        name = "+ Random Delay",
+        flag = "AutoGeneratorRandomDelay",
+        range = { 0, 20 },
+        increment = 0.5,
+        value = settings.Generator.RandomDelay,
+        suffix = "s",
+        callback = function(value)
+            settings.Generator.RandomDelay = value
+        end,
+    })
+
+    local presetsDropDownGenerator = generatorTab:CreateDropdown({
+        name = "Presets",
+        flag = "GeneratorPresets",
+        multiSelect = false,
+        options = { "Default", "Legit", "Balanced", "Semi-Legit", "Blatant" },
+        placeholder = "Custom",
+        callback = function(selected)
+            if selected == "Default" then 
+                autoDelayGenerator:Set(4)
+                randomDelayGenerator:Set(0)
+            elseif selected == "Legit" then
+                autoDelayGenerator:Set(3)
+                randomDelayGenerator:Set(4)
+            elseif selected == "Balanced" then 
+                autoDelayGenerator:Set(3)
+                randomDelayGenerator:Set(2.5)
+            elseif selected == "Semi-Legit" then 
+                autoDelayGenerator:Set(2.5)
+                randomDelayGenerator:Set(2.5)
+            elseif selected == "Blatant" then 
+                autoDelayGenerator:Set(1)
+                randomDelayGenerator:Set(2)
+            end
+
+            self.window:Toast({ title = "Preset Applied", position = "Bottom", icon = 125823673784681 })
+        end,
+    })
+
+    presetsDropDownGenerator:MoveToTop()
+
 
     local espTab = self.window:CreateTab({ name = "ESP", icon = 93364949241311 })
 

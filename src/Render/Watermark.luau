@@ -76,7 +76,7 @@ function Watermark:Run()
 
             self.watermark.Size = UDim2.new(1, 0, 1, 0)
             self.watermark.Text = string.format(
-                "Forsaken v%s by Sino\nFrame Time: %.2f ms\nFPS: %.2f\nConnections: %d\nInstances: %d\nCached Killers: %d\nCached Survivors: %d\nCached Items: %d",
+                "Forsaken v%s by Sino\nPossible Frame Time: %.2f ms\nPossible FPS: %.2f\nConnections: %d\nInstances: %d\nCached Killers: %d\nCached Survivors: %d\nCached Items: %d",
                 Forsaken.globals.version,
                 Forsaken.performance.frameTime * 1000,
                 Forsaken.performance.fps,

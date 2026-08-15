@@ -1,8 +1,13 @@
+local Players = game:GetService("Players")
 local Cache = {}
 local Forsaken = getgenv().Forsaken
 
 function Cache:CacheKillerModels()
     for _, child in pairs(Forsaken.globals.killerFolder:GetChildren()) do
+        if self.localPlayer.Character ~= nil and self.localPlayer.Character == child then 
+            return
+        end
+
         Forsaken.cache.killerModels[child] = child
         child.Destroying:Connect(function()
             Forsaken.cache.killerModels[child] = nil
@@ -12,6 +17,10 @@ end
 
 function Cache:CacheSurvivorModels()
     for _, child in pairs(Forsaken.globals.survivorFolder:GetChildren()) do
+        if self.localPlayer.Character ~= nil and self.localPlayer.Character == child then 
+            return
+        end
+        
         Forsaken.cache.survivorModels[child] = child
         child.Destroying:Connect(function()
             Forsaken.cache.survivorModels[child] = nil
@@ -70,7 +79,13 @@ function Cache:Init()
         generatorModels = {}
     }
 
+    self.localPlayer = Players.LocalPlayer
+
     Forsaken.connections.killerModels = Forsaken.globals.killerFolder.ChildAdded:Connect(function(child)
+        if self.localPlayer.Character ~= nil and self.localPlayer.Character == child then 
+            return
+        end
+
         Forsaken.cache.killerModels[child] = child
         child.Destroying:Connect(function()
             Forsaken.cache.killerModels[child] = nil
@@ -78,6 +93,10 @@ function Cache:Init()
     end)
 
     Forsaken.connections.survivorModels = Forsaken.globals.survivorFolder.ChildAdded:Connect(function(child)
+        if self.localPlayer.Character ~= nil and self.localPlayer.Character == child then 
+            return
+        end
+
         Forsaken.cache.survivorModels[child] = child
         child.Destroying:Connect(function()
             Forsaken.cache.survivorModels[child] = nil

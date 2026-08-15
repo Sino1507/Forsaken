@@ -13,12 +13,17 @@ function Globals.Init()
     local globals = Forsaken.globals
 
     -- Define global variables here
-    globals.version = "1.1.0"
+    globals.version = "1.2.0"
 
     globals.window = nil
 
     globals.sprintingModule = ReplicatedStorage:WaitForChild("Systems", 20):WaitForChild("Character", 20):WaitForChild("Game", 20):WaitForChild("Sprinting", 20)
     globals.flowGameManagerModule = ReplicatedStorage:WaitForChild("Modules", 20):WaitForChild("Minigames", 20):WaitForChild("FlowGameManager", 20)
+
+    globals.speedModifiersFolder = "SpeedMultipliers"
+    globals.sprintingSpeedModifier = "Sprinting"
+    globals.directionalSpeedModifier = "DirectionalMovement"
+
 
     globals.killerFolder = Workspace:WaitForChild("Players", 20):WaitForChild("Killers", 20)
     globals.survivorFolder = Workspace:WaitForChild("Players", 20):WaitForChild("Survivors", 20)

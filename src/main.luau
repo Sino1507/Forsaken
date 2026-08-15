@@ -75,6 +75,7 @@ local ESP = Include("Render/ESP.luau")
 local Watermark = Include("Render/Watermark.luau")
 
 local StaminaController = Include("Features/StaminaController.luau")
+local EffectsController = Include("Features/EffectsController.luau")
 local GeneratorController = Include("Features/GeneratorController.luau")
 
 Globals.Init()
@@ -90,6 +91,7 @@ ESP:Init()
 Watermark:Init()
 
 StaminaController:Init()
+EffectsController:Init()
 GeneratorController:Init()
 
 Forsaken.globals.window:Toast({ title = (LoadedSave and "Save Loaded" or "No Save"), position = "Bottom", icon = 125823673784681 })
@@ -99,6 +101,7 @@ Forsaken.connections.RenderStepped = RunService.RenderStepped:Connect(function()
     local startTime = tick()
 
     StaminaController:Run()
+    EffectsController:Run()
     GeneratorController:Run()
     ESP:Run()
     Watermark:Run()

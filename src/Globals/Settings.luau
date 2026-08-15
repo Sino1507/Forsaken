@@ -24,7 +24,15 @@ function Settings.Init()
 
     settings.Generator = {
         AutoComplete = false,
-        AutoDelay = 5,
+        AutoDelay = 4,
+        RandomDelay = 0,
+    }
+
+    settings.Effects = {
+        BuffSlownessRate = 1.0,
+        BuffSpeedRate = 1.0,
+        IgnoreSprinting = true,
+        IgnoreDirectional = false,
     }
 
     settings.ESP = {

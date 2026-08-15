@@ -20,7 +20,7 @@ else
 end
 
 Forsaken.__initialized = true
-Forsaken.developmentMode = true
+Forsaken.developmentMode = false
 
 getgenv().Forsaken = Forsaken
 

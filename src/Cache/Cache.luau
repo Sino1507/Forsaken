@@ -2,10 +2,16 @@ local Players = game:GetService("Players")
 local Cache = {}
 local Forsaken = getgenv().Forsaken
 
+local SlateTimer = getgenv().Include("Features/SlateTimer.luau")
+
 function Cache:CacheKillerModels()
     for _, child in pairs(Forsaken.globals.killerFolder:GetChildren()) do
         if self.localPlayer.Character ~= nil and self.localPlayer.Character == child then 
             continue
+        end
+
+        if child:GetAttribute("Username") == self.localPlayer.Name then 
+            return
         end
 
         Forsaken.cache.killerModels[child] = child
@@ -19,6 +25,16 @@ function Cache:CacheSurvivorModels()
     for _, child in pairs(Forsaken.globals.survivorFolder:GetChildren()) do
         if self.localPlayer.Character ~= nil and self.localPlayer.Character == child then 
             continue
+        end
+
+        if child:GetAttribute("Username") == self.localPlayer.Name then 
+            return
+        end
+
+        if child.Name == "Noob" then 
+            table.insert(Forsaken.connections.SlateConnections, task.spawn(function()
+                SlateTimer:Init(child)
+            end))
         end
 
         Forsaken.cache.survivorModels[child] = child
@@ -79,6 +95,8 @@ function Cache:Init()
         generatorModels = {}
     }
 
+    Forsaken.connections.SlateConnections = {}
+
     self.localPlayer = Players.LocalPlayer
 
     Forsaken.connections.killerModels = Forsaken.globals.killerFolder.ChildAdded:Connect(function(child)
@@ -87,6 +105,10 @@ function Cache:Init()
         end
 
         task.delay(1, function()
+            if child:GetAttribute("Username") == self.localPlayer.Name then 
+                return
+            end
+
             Forsaken.cache.killerModels[child] = child
         end)
         child.Destroying:Connect(function()
@@ -99,7 +121,17 @@ function Cache:Init()
             return
         end
 
+        if child.Name == "Noob" then 
+            table.insert(Forsaken.connections.SlateConnections, task.spawn(function()
+                SlateTimer:Init(child)
+            end))
+        end 
+
         task.delay(1, function()
+            if child:GetAttribute("Username") == self.localPlayer.Name then 
+                return
+            end
+
             Forsaken.cache.survivorModels[child] = child
         end)
         child.Destroying:Connect(function()

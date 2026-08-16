@@ -56,6 +56,11 @@ function Settings.Init()
             GeneratorTransparency = 0.5,
         },
     }
+
+    settings.ExtraInfo = {
+        NotifyMe = false,
+        SlateSkinTimer = true,
+    }
 end
 
 return Settings

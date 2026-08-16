@@ -294,6 +294,28 @@ function UI:Init()
 
     presetsDropDownGenerator:MoveToTop()
 
+    local infoTab = self.window:CreateTab({ name = "Information", icon = 93364949241311 })
+
+    infoTab:CreateToggle({
+        name = "Notify Me",
+        flag = "NotifyMeInfo",
+        value = settings.ExtraInfo.NotifyMe,
+        callback = function(value)
+            settings.ExtraInfo.NotifyMe = value
+        end,
+    })
+
+    infoTab:CreateSection({ name = "Information", icon = 93364949241311 })
+
+    infoTab:CreateToggle({
+        name = "Slateskin Timer",
+        flag = "SlateskinTimer",
+        value = settings.ExtraInfo.SlateSkinTimer,
+        callback = function(value)
+            settings.ExtraInfo.SlateSkinTimer = value
+        end,
+    })
+
 
     local espTab = self.window:CreateTab({ name = "ESP", icon = 93364949241311 })
 
@@ -345,7 +367,7 @@ function UI:Init()
     })
 
     espTab:CreateSection({ name = "Advanced Settings", icon = 93364949241311 })
-    
+
     espTab:CreateToggle({
         name = "Finished Generator Check",
         flag = "FinishedGeneratorCheck",

@@ -5,7 +5,7 @@ local Forsaken = getgenv().Forsaken
 function Cache:CacheKillerModels()
     for _, child in pairs(Forsaken.globals.killerFolder:GetChildren()) do
         if self.localPlayer.Character ~= nil and self.localPlayer.Character == child then 
-            return
+            continue
         end
 
         Forsaken.cache.killerModels[child] = child
@@ -18,9 +18,9 @@ end
 function Cache:CacheSurvivorModels()
     for _, child in pairs(Forsaken.globals.survivorFolder:GetChildren()) do
         if self.localPlayer.Character ~= nil and self.localPlayer.Character == child then 
-            return
+            continue
         end
-        
+
         Forsaken.cache.survivorModels[child] = child
         child.Destroying:Connect(function()
             Forsaken.cache.survivorModels[child] = nil

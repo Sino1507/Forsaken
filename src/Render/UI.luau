@@ -345,12 +345,22 @@ function UI:Init()
     })
 
     espTab:CreateSection({ name = "Advanced Settings", icon = 93364949241311 })
+    
     espTab:CreateToggle({
         name = "Finished Generator Check",
         flag = "FinishedGeneratorCheck",
         value = settings.ESP.IgnoreFinishedGens,
         callback = function(value)
             settings.ESP.IgnoreFinishedGens = value
+        end,
+    })
+
+    espTab:CreateToggle({
+        name = "Health Mapped Colors",
+        flag = "HealthMappedColors",
+        value = settings.ESP.Colors.UseHealthSuvivors,
+        callback = function(value)
+            settings.ESP.Colors.UseHealthSuvivors = value
         end,
     })
 

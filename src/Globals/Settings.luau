@@ -44,9 +44,10 @@ function Settings.Init()
         IgnoreFinishedGens = false,
         Colors = {
             ItemColor = Color3.new(0, 0, 1), -- Blue
-            KillerColor = Color3.new(1, 0, 0), -- Red
+            KillerColor = Color3.new(1, 0, 1), -- Pink
             SurvivorColor = Color3.new(0, 1, 0), -- Green
             GeneratorColor = Color3.new(1, 1, 0), -- Yellow
+            UseHealthSuvivors = false,
         },
         Transparencies = {
             ItemTransparency = 0.5,

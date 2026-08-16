@@ -86,7 +86,9 @@ function Cache:Init()
             return
         end
 
-        Forsaken.cache.killerModels[child] = child
+        task.delay(1, function()
+            Forsaken.cache.killerModels[child] = child
+        end)
         child.Destroying:Connect(function()
             Forsaken.cache.killerModels[child] = nil
         end)
@@ -97,7 +99,9 @@ function Cache:Init()
             return
         end
 
-        Forsaken.cache.survivorModels[child] = child
+        task.delay(1, function()
+            Forsaken.cache.survivorModels[child] = child
+        end)
         child.Destroying:Connect(function()
             Forsaken.cache.survivorModels[child] = nil
         end)

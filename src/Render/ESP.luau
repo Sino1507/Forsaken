@@ -7,13 +7,9 @@ function ESP:Init()
         error("Forsaken is not initialized. Please ensure that the main script is loaded before accessing other scripts.")
     end
 
-    local settings = Forsaken.settings
-    local globals = Forsaken.globals
-    local cache = Forsaken.cache
-
-    self.settings = settings
-    self.globals = globals
-    self.cache = cache
+    self.settings = Forsaken.settings
+    self.globals = Forsaken.globals
+    self.cache = Forsaken.cache
     self.cleared = false
 end
 
@@ -43,6 +39,25 @@ function ESP:RemoveFingerprintedHighlight(part)
     end
 end
 
+function ESP:HealthToColor(surivor)
+    if surivor == nil then 
+        return self.settings.ESP.Colors.SurvivorColor
+    end
+
+    local humanoid = surivor.Humanoid
+
+    if humanoid == nil then
+        return self.settings.ESP.Colors.SurvivorColor 
+    end
+
+    local healthPercent = math.clamp(humanoid.Health / humanoid.MaxHealth, 0, 1)
+
+    -- Hue: 0 = red, 1/3 = green
+    local hue = healthPercent / 3
+
+    return Color3.fromHSV(hue, 1, 1)
+end
+
 function ESP:UpdateESP()
     for _, killer in pairs(self.cache.killerModels) do
         if self.settings.ESP.ShowKillers then
@@ -66,8 +81,14 @@ function ESP:UpdateESP()
                 highlight.FillTransparency = self.settings.ESP.Transparencies.SurvivorTransparency
             else
                 local highlight = survivor:FindFirstChild("ForsakenHighlight")
-                highlight.FillColor = self.settings.ESP.Colors.SurvivorColor
+
                 highlight.FillTransparency = self.settings.ESP.Transparencies.SurvivorTransparency
+                
+                if self.settings.ESP.Colors.UseHealthSuvivors then 
+                    highlight.FillColor = self:HealthToColor(survivor)
+                else
+                    highlight.FillColor = self.settings.ESP.Colors.SurvivorColor
+                end
             end
         else
             self:RemoveFingerprintedHighlight(survivor)

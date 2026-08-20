@@ -28,7 +28,7 @@ function GeneratorController:Run()
             end)
             Forsaken.globals.window:Toast({ title = string.format("Started Solving: %.2f s", delayTime), position = "Bottom", icon = 125823673784681 })
         else
-            if self.solvingThread ~= nil then 
+            if self.solvingThread ~= nil and self.flowGameManager.activeGame == nil then 
                 task.cancel(self.solvingThread)
                 self.solvingThread = nil
                 self.isSolving = false

@@ -131,8 +131,14 @@ function Forsaken.Unload()
     end
 
     for _, connection in pairs(Forsaken.connections) do
-        if connection and connection.Disconnect then
-            connection:Disconnect()
+        if connection then
+            pcall(function()
+                connection:Disconnect()
+            end)
+            
+            pcall(function()
+                task.cancel(connection)
+            end)
         end
     end
 

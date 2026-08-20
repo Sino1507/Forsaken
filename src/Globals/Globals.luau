@@ -13,7 +13,7 @@ function Globals.Init()
     local globals = Forsaken.globals
 
     -- Define global variables here
-    globals.version = "1.2.4"
+    globals.version = "1.2.5"
 
     globals.window = nil
 

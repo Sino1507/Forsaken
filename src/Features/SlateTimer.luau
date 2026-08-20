@@ -91,7 +91,7 @@ function SlateTimer:Init(Noob: Model)
         return
     end
 
-    local Slateskin: Part = Noob.Slateskin
+    local Slateskin: Part = Noob:WaitForChild("Slateskin", 10)
 
     if Slateskin == nil then 
         return 
